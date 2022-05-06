@@ -1,10 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>
+                    Name
+                </td>
+                <td>
 
-    @foreach($users as $user)
-        <div>
-            {{$user}}
-        </div>
-    @endforeach
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($users as $user)
+
+            @endforeach
+        </tbody>
+    </table>
+
 @endsection
