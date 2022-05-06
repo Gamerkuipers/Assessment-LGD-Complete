@@ -33,11 +33,9 @@ class AppServiceProvider extends ServiceProvider
                ->symbols();
         });
 
-        Http::macro('spikkl', function (string $postalCode, string $houseNumber) {
-            return Http::withOptions(['verify'=>false])->get(env('spikkl_url').
-                '?key='.env('spikkl_key').
-                '&postal_code='.$postalCode.
-                '&street_number='.$houseNumber
+        Http::macro('spikkl', function () {
+            return Http::withOptions(['verify'=>false])->baseUrl(env('spikkl_url').
+                '?key='.env('spikkl_key')
             );
         });
     }

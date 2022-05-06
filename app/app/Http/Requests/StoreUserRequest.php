@@ -27,4 +27,13 @@ class StoreUserRequest extends FormRequest
             'confirm_password' => 'required|same:password',
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $data = $validator->validated;
+            dd($data)
+            ;
+        });
+    }
 }

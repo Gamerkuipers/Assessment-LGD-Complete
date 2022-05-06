@@ -43,20 +43,21 @@ class UserController extends Controller
 
         $validated = $request->validated();
 
-        $postal = $request->get('postal_code');
-        $houseNumber = $request->get('house_number');
 
-        $response = Http::spikkl($postal, $houseNumber);
+
+        $response = Http::spikkl()->get(
+                '&postal_code='.$validated['postal_code'].
+                '&street_number='.$validated['house_number']
+        );
 
         // Unable to get the correct response
-//        dd($response);
 //        if($response) return
 
-        $user = new User;
-
+        $user = new User($validated);
+        dd($user);
         $initials = $validated['initials'];
         $firstName = $validated['first_name'];
-
+//        Iloveyou10!
         if(substr($initials,0,1) != substr($firstName,0,1)) return back()->withErrors('initials','First letter does not equal firstname letter.');
 
         $user->first_name = $firstName;
