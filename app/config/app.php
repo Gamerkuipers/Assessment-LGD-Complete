@@ -7,6 +7,8 @@ return [
     'spikkl_url' => env('SPIKKL_URL'),
     'spikkl_key' => env('SPIKKL_KEY'),
 
+    'google_maps_key' => env('GOOGLE_MAPS_APIKEY'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

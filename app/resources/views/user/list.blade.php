@@ -53,8 +53,10 @@
                             type="button"
                             class="btn btn-primary"
                             data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            data-bs-whatever="{{ $user->name }}"
+                            data-bs-target="#userModal"
+                            data-bs-locationData="{{ $user->spikkl_data }}"
+                            data-bs-googleMapsKey="{{ config('app.google_maps_key') }}"
+                            data-bs-user="{{ $user }}"
                         >
                             Location
                         </button>
@@ -66,28 +68,16 @@
     </table>
 
 
-    <div class="modal fade text-dark" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade text-dark" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title" id="userModalLabel">New message</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                    </form>
-                </div>
+                <div class="modal-body" id="userModalBody"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
                 </div>
             </div>
         </div>
@@ -95,21 +85,92 @@
 
     <script>
         // code from bootstrap but edited
-        let userModal = document.getElementById('exampleModal')
+        let userModal = document.getElementById('userModal')
         userModal.addEventListener('show.bs.modal', function (event) {
             // Button that triggered the modal
-            let button = event.relatedTarget
-            // Extract info from data-bs-* attributes
-            let user = button.getAttribute('data-bs-whatever')
-            // If necessary, you could initiate an AJAX request here
-            // and then do the updating in a callback.
-            console.log(user)
-            // Update the modal's content.
-            let modalTitle = userModal.querySelector('.modal-title')
-            let modalBodyInput = userModal.querySelector('.modal-body input')
+            let buttonEl = event.relatedTarget
 
-            modalTitle.textContent = 'New message to ' + user
-            modalBodyInput.value = userModal
+            // Extract info from data-bs-* attributes
+            let user = JSON.parse(buttonEl.getAttribute('data-bs-user'))
+            let locationData = JSON.parse(buttonEl.getAttribute('data-bs-locationData'))
+            let googleMapsKey = buttonEl.getAttribute('data-bs-googleMapsKey')
+
+            let modalBodyEl = document.getElementById('userModalBody')
+            let modalTitleEl = document.getElementById('userModalLabel')
+
+            modalBodyEl.innerHTML = ''
+
+            modalTitleEl.textContent = `Location of ${user.first_name} ${user.surname}`
+
+            let infoEl = createElement();
+
+            let countryEl = createElement('div',{},`<strong>Country</strong>: ${locationData.country}`)
+            let cityEl = createElement('div',{},`<strong>City</strong>: ${locationData.city}`)
+            let streetNameEl = createElement('div',{},`<strong>Street</strong>: ${locationData.street_name} ${user.house_number}`)
+            let postalCodeEl = createElement('div',{},`<strong>Postal Code</strong>: ${user.postal_code}`)
+
+            infoEl.appendChild(countryEl)
+            infoEl.appendChild(cityEl)
+            infoEl.appendChild(streetNameEl)
+            infoEl.appendChild(postalCodeEl)
+
+            /**
+             * google maps elements
+             */
+
+            console.log(googleMapsKey)
+
+            let coordinates = locationData.coordinates;
+            coordinates = coordinates.replace('[','')
+            coordinates = coordinates.replace(']','')
+            let mapsEl = createElement(
+                'iframe',
+                {
+                    'width': '200',
+                    'height': '200',
+                    'style': 'border:0',
+                    'loading': 'lazy',
+                    'allowfullscreen': '',
+                    'class': 'mt-2',
+                    'referrerpolicy': 'no-referrer-when-downgrade',
+                    'src': `https://www.google.com/maps/embed/v1/place?key=${googleMapsKey}&q=${coordinates}`
+                }
+            )
+
+            let mapDivEl = createElement('div',{'class':'d-flex flex-column'},'<strong>Maps Location</strong>')
+
+            mapDivEl.appendChild(mapsEl)
+
+            modalBodyEl.appendChild(infoEl)
+            modalBodyEl.appendChild(mapDivEl)
+
+
+
+            // <iframe
+            // width="600"
+            // height="450"
+            // style="border:0"
+            // loading="lazy"
+            // allowfullscreen
+            // referrerpolicy="no-referrer-when-downgrade"
+            // src="https://www.google.com/maps/embed/v1/place?key=API_KEY
+            // &q=Space+Needle,Seattle+WA">
+            // </iframe>
         })
+
+        function createElement(element = 'div', attributes = {}, text = '') {
+            let el = document.createElement(element);
+
+            if(typeof attributes === 'object') {
+                for (let key in attributes) {
+                    el.setAttribute(key, attributes[key]);
+                }
+            }
+
+            if (typeof text != "undefined") {
+                el.innerHTML = text;
+            }
+            return el;
+        }
     </script>
 @endsection
