@@ -32,14 +32,22 @@ class StoreUserRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            /**
+             * Initial and firstName Validation
+             * check if the first initial matches the first letter of first name
+             */
             $firstname = $this->request->get('first_name');
             $initials = $this->request->get('initials');
-            // check initials
+
             if(substr_compare($firstname,substr($initials,0,1),0,1))
             {
                 $validator->errors()->add('initials','The first initials does not match your first name');
             }
 
+            /**
+             * Postal code and House Number Validation
+             * check the postal and house number with the spickle api
+             */
             $response = Http::spikkl()->get('',[
                 'key' => env('spikkl_key'),
                 'postal_code' => $this->request->get('postal_code'),
@@ -51,6 +59,8 @@ class StoreUserRequest extends FormRequest
                 $error_msg = 'Invalid combination with %s';
                 $validator->errors()->add('postal_code',sprintf($error_msg,'"House Number"'));
                 $validator->errors()->add('house_number',sprintf($error_msg,'"Postal Code"'));
+            } else {
+                $this->request->set('spikkl_data', $response['results'][0]);
             }
         });
     }
