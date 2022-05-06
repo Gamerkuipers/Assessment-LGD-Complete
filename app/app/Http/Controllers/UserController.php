@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -19,7 +17,7 @@ class UserController extends Controller
     public function index(): View
     {
         $users = User::all();
-        return View('user.list', ['users' => $users]);
+        return view('user.list', ['users' => $users]);
     }
 
     /**
@@ -36,24 +34,20 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  StoreUserRequest  $request
-     * @return Response
+     * @return RedirectResponse
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): RedirectResponse
     {
 
         $validated = $request->validated();
 
-        $response = Http::spikkl()->get(
-                '&postal_code='.$validated['postal_code'].
-                '&street_number='.$validated['house_number']
-        );
-
-        // Unable to get the correct response
-//        if($response) return
-
         $user = new User($validated);
 //        Iloveyou10!
 
+        $user->setPassword($validated['password']);
+
         $user->save();
+
+        return redirect()->route('user.list');
     }
 }
