@@ -49,7 +49,7 @@ class StoreUserRequest extends FormRequest
              * check the postal and house number with the spickle api
              */
             $response = Http::spikkl()->get('',[
-                'key' => env('spikkl_key'),
+                'key' => config('app.spikkl_key'),
                 'postal_code' => $this->request->get('postal_code'),
                 'street_number' => $this->request->get('house_number')
             ])->json();

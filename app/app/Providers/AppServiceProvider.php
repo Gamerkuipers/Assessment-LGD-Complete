@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Http::macro('spikkl', function () {
-            return Http::baseUrl(env('spikkl_url'));
+            return Http::baseUrl(config('app.spikkl_url'));
         });
     }
 }

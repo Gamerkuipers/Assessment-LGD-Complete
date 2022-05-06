@@ -43,7 +43,6 @@ class UserController extends Controller
         $validated = $request->validated();
 
         $user = new User($validated);
-//        Iloveyou10!
 
         $user->setPassword($validated['password']);
 
