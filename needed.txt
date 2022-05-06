@@ -1,0 +1,25 @@
+FORM FIELDS
+- first name
+- surname
+- initials
+
+- postal code and house number (check with api)
+
+- email-address (if there is time check with mx-records)
+
+- phone number (valid dutch or german number)
+
+- password (check strength) save in hash
+
+OVERVIEW PAGE
+- list all records in database
+
+EXPECTATIONS
+● Your style of programming and consistency
+● The technical choices that you make to come up with an working project
+● Safety
+● Efficiency (especially with regard to your api-implementation)
+● Your use of modern techniques
+● Preferably a not procedurally but object oriented approach
+● Maintainability and expendability of the code in the future
+● Used libraries and other resources
