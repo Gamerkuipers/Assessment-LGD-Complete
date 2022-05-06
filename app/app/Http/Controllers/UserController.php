@@ -43,8 +43,6 @@ class UserController extends Controller
 
         $validated = $request->validated();
 
-
-
         $response = Http::spikkl()->get(
                 '&postal_code='.$validated['postal_code'].
                 '&street_number='.$validated['house_number']
@@ -54,16 +52,7 @@ class UserController extends Controller
 //        if($response) return
 
         $user = new User($validated);
-        $initials = $validated['initials'];
-        $firstName = $validated['first_name'];
 //        Iloveyou10!
-        if(substr($initials,0,1) != substr($firstName,0,1)) return back()->withErrors('initials','First letter does not equal firstname letter.');
-
-        $user->first_name = $firstName;
-        $user->surname = $validated->get('surname');
-        $user->initials = $validated->get('initials');
-        $user->postal_code = $postal;
-        $user->house_number = $houseNumber;
 
         $user->save();
     }
