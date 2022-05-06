@@ -31,8 +31,15 @@ class StoreUserRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $data = $validator->validated;
-            dd($data)
+            $firstname = $this->request->get('first_name');
+            $initials = $this->request->get('initials');
+            // check initials
+            if(strtoupper(substr($firstname,0,1)) != strtoupper(substr($initials,0,1)))
+            {
+                $validator->errors()->add('initials','The first initials does not match your first name');
+            }
+
+            dd($validator)
             ;
         });
     }
