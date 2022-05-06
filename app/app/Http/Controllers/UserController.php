@@ -54,7 +54,6 @@ class UserController extends Controller
 //        if($response) return
 
         $user = new User($validated);
-        dd($user);
         $initials = $validated['initials'];
         $firstName = $validated['first_name'];
 //        Iloveyou10!
