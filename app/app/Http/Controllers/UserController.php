@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Spikkl_data;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\RedirectResponse;
@@ -46,7 +47,19 @@ class UserController extends Controller
 
         $user->setPassword($validated['password']);
 
+        $spikkl_response = $request->get('spikkl_data');
+        $spikkl_data = new Spikkl_data();
+
+        $spikkl_data->street_name = $spikkl_response['street_name'];
+        $spikkl_data->city = $spikkl_response['city'];
+        $spikkl_data->country = $spikkl_response['country']['name'];
+        $spikkl_data->setCoordinates(
+            $spikkl_response['centroid']['latitude'],
+            $spikkl_response['centroid']['longitude']
+        );
+
         $user->save();
+        $user->spikkl_data()->save($spikkl_data);
 
         return redirect()->route('user.list');
     }

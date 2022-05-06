@@ -55,4 +55,9 @@ class User extends Authenticatable
         }
         $this->attributes['password'] = $value;
     }
+
+    public function spikkl_data()
+    {
+        return $this->hasOne(Spikkl_data::class);
+    }
 }

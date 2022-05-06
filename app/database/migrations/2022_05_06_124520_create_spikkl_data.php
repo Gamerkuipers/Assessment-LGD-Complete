@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('country');
             $table->string('coordinates');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('spikkl_data');
+        Schema::dropIfExists('spikkl_datas');
     }
 };
